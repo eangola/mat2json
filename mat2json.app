@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 """
 Created : 21-06-2018
-Last Modified : Fri 22 Jun 2018 06:46:45 PM EDT
+Last Modified : Fri 22 Jun 2018 07:05:55 PM EDT
 Created By : Enrique D. Angola
 """
 
@@ -9,6 +9,8 @@ import json
 
 import scipy.io as spio
 import pandas as pd
+import argparse
+import sys
 
 def loadmat(filename):
     '''
@@ -90,18 +92,12 @@ def parse_args(args):
 
     """
 
-    parser = argparse.ArgumentParser(description='A portable UNIX executable\
-            for performing bandit selection. This process reads a history \
-            file and records the next arm to be plated to that history file')
-    parser.add_argument('algorithm', type = str, help = 'choice of bandit \
-            selection algorithm. Must be "eps-first greedy" or "eps greedy", \
-            exacttly.')
-    parser.add_argument('historyfile', type = str, help = 'a csv file in the \
-            current working directory that stores the history of the current \
-            gamble. the ID of the next arm to play is appended to this file; \
-            another process will then add the reward for that play.')
-    parser.add_argument('N', type = int, help = 'an integer > 1, the number \
-            of arms the bandit has, with arm IDs 0, 1, ..., N-1')
+    parser = argparse.ArgumentParser(description='A portable UNIX exececutable that \
+            converts a .mat NWTC 20Hz file into a .json file')
+    parser.add_argument('filename', type = str, help = 'path/filename of .mat file \
+            to convert to json')
+    parser.add_argument('filepath', type = str, help = 'filepath of folder to save \
+            the .json file')
 
     args = parser.parse_args(args)
     return args
@@ -121,10 +117,7 @@ def main(args):
 
     """
 
-    data = read_csv(args.historyfile)
-    b = Bandit(arms=args.N,preData=data)
-    arm2play = b.gamble(method=args.algorithm)
-    write_csv(filename=args.historyfile,arm2play=arm2play)
+    mat2json(args.filename,args.filepath)
 
 
 if __name__ == '__main__':
